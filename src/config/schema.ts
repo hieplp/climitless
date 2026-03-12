@@ -26,7 +26,7 @@ const BrowserTriggerConfigSchema = z.object({
 
 export const ConfigSchema = z.object({
   version: z.number().int().default(1),
-  daemon: DaemonConfigSchema.default({}),
+  daemon: DaemonConfigSchema.default({ auto_reload: true, log_level: "info" }),
   schedules: z.array(ScheduleEntrySchema).default([]),
   prompts: z.object({ pool: z.array(z.string()).default([]) }).default({ pool: [] }),
   triggers: z
