@@ -26,7 +26,11 @@ export async function runWizard(config: Config): Promise<ScheduleEntry> {
 
   let cron: string
   if (scheduleMode === "simple") {
-    const time = await p.text({ message: "Enter time (HH:MM)", placeholder: "04:00" })
+    const time = await p.text({
+      message: "Enter time (HH:MM)",
+      placeholder: "04:00",
+      validate: (v) => /^\d{1,2}:\d{2}$/.test(v) ? undefined : "Please enter a valid time in HH:MM format (e.g. 04:00)",
+    })
     if (p.isCancel(time)) { p.cancel("Cancelled"); process.exit(0) }
     const [hh, mm] = (time as string).split(":")
     const recurrence = await p.select<string>({
@@ -39,7 +43,7 @@ export async function runWizard(config: Config): Promise<ScheduleEntry> {
     })
     if (p.isCancel(recurrence)) { p.cancel("Cancelled"); process.exit(0) }
     const days = recurrence === "weekdays" ? "1-5" : "*"
-    cron = `${mm ?? "0"} ${hh ?? "0"} * * ${days}`
+    cron = `${mm || "0"} ${hh || "0"} * * ${days}`
   } else {
     const cronRaw = await p.text({ message: "Enter cron expression", placeholder: "0 4 * * 1-5" })
     if (p.isCancel(cronRaw)) { p.cancel("Cancelled"); process.exit(0) }
