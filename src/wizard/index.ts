@@ -11,6 +11,7 @@ export async function runWizard(config: Config): Promise<ScheduleEntry> {
       { value: "claude-cli", label: "Claude CLI (requires `claude` on PATH)" },
       { value: "claude-api", label: "Claude API (requires ANTHROPIC_API_KEY)" },
       { value: "browser",    label: "Browser (opens Claude.ai URL)" },
+      { value: "log",        label: "Log only (for testing — no Claude invoked)" },
     ],
   })
   if (p.isCancel(trigger)) { p.cancel("Cancelled"); process.exit(0) }
