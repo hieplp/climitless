@@ -10,7 +10,7 @@ export function addCommand(): Command {
   return new Command("add")
     .description("Add a new schedule (wizard if no cron arg)")
     .argument("[cron]", "Cron expression")
-    .option("--trigger <type>", "Trigger type: claude-cli | claude-api | browser")
+    .option("--trigger <type>", "Trigger type: claude-cli | claude-api | browser | log")
     .option("--prompt-type <type>", "Prompt type: fixed | random | dynamic")
     .option("--prompt <text>", "Fixed prompt text")
     .option("--prompt-template <text>", "Dynamic prompt template")

@@ -2,6 +2,7 @@ import type { ScheduleEntry, Config } from "../config/schema"
 import { claudeCliTrigger } from "./claude-cli"
 import { claudeApiTrigger } from "./claude-api"
 import { browserTrigger } from "./browser"
+import { logTrigger } from "./log"
 
 export async function fireTrigger(
   schedule: ScheduleEntry,
@@ -27,5 +28,9 @@ export async function fireTrigger(
       await browserTrigger(url)
       break
     }
+
+    case "log":
+      await logTrigger(schedule.id, schedule.cron, prompt)
+      break
   }
 }

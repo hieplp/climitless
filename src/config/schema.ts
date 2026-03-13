@@ -4,7 +4,7 @@ const ScheduleEntrySchema = z.object({
   id: z.string().min(3).max(64).regex(/^[a-z0-9-]+$/),
   cron: z.string().min(1),
   enabled: z.boolean().default(true),
-  trigger: z.enum(["claude-cli", "claude-api", "browser"]),
+  trigger: z.enum(["claude-cli", "claude-api", "browser", "log"]),
   prompt_type: z.enum(["fixed", "random", "dynamic"]),
   prompt: z.string().optional(),
   prompt_template: z.string().optional(),
