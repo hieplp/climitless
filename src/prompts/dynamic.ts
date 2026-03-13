@@ -1,9 +1,6 @@
-const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-export function buildDynamic(
-  template: string | undefined,
-  ctx: { scheduleId: string }
-): string {
+export function buildDynamic(template: string | undefined, ctx: { scheduleId: string }): string {
   if (!template) throw new Error("dynamic prompt requires a 'prompt_template' field")
   const now = new Date()
   const date = now.toISOString().slice(0, 10)

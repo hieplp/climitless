@@ -42,7 +42,9 @@ describe("ConfigSchema", () => {
     const raw = {
       version: 1,
       daemon: { auto_reload: true, log_level: "info" },
-      schedules: [{ id: "test", cron: "0 4 * * *", enabled: true, trigger: "unknown", prompt_type: "fixed" }],
+      schedules: [
+        { id: "test", cron: "0 4 * * *", enabled: true, trigger: "unknown", prompt_type: "fixed" },
+      ],
       prompts: { pool: [] },
       triggers: {},
       notifications: { enabled: false },

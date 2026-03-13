@@ -37,7 +37,8 @@ export function createIpcServer(handlers: IpcHandlers): { stop: () => void; read
       let buf = ""
       socket.on("data", async (chunk) => {
         buf += chunk.toString()
-        const lines = buf.split("\n"); buf = lines.pop() ?? ""
+        const lines = buf.split("\n")
+        buf = lines.pop() ?? ""
         for (const line of lines) {
           if (!line.trim()) continue
           const res = await handleLine(line, handlers)
@@ -53,17 +54,26 @@ export function createIpcServer(handlers: IpcHandlers): { stop: () => void; read
         resolve()
       })
     })
-    return { ready, stop() { server.close(); if (existsSync(PORT_FILE)) unlinkSync(PORT_FILE) } }
+    return {
+      ready,
+      stop() {
+        server.close()
+        if (existsSync(PORT_FILE)) unlinkSync(PORT_FILE)
+      },
+    }
   } else {
     // Unix: AF_UNIX socket
     if (existsSync(SOCKET_PATH)) unlinkSync(SOCKET_PATH)
     const server = Bun.listen<{ buf: string }>({
       unix: SOCKET_PATH,
       socket: {
-        open(s) { s.data = { buf: "" } },
+        open(s) {
+          s.data = { buf: "" }
+        },
         async data(s, data) {
           s.data.buf += new TextDecoder().decode(data)
-          const lines = s.data.buf.split("\n"); s.data.buf = lines.pop() ?? ""
+          const lines = s.data.buf.split("\n")
+          s.data.buf = lines.pop() ?? ""
           for (const line of lines) {
             if (!line.trim()) continue
             const res = await handleLine(line, handlers)
@@ -74,38 +84,59 @@ export function createIpcServer(handlers: IpcHandlers): { stop: () => void; read
     })
     return {
       ready: Promise.resolve(),
-      stop() { server.stop(); if (existsSync(SOCKET_PATH)) unlinkSync(SOCKET_PATH) },
+      stop() {
+        server.stop()
+        if (existsSync(SOCKET_PATH)) unlinkSync(SOCKET_PATH)
+      },
     }
   }
 }
 
 export async function sendIpcCommand(req: IpcRequest, timeoutMs = 5000): Promise<IpcResponse> {
   return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error("IPC timeout — is the daemon running?")), timeoutMs)
+    const timer = setTimeout(
+      () => reject(new Error("IPC timeout — is the daemon running?")),
+      timeoutMs
+    )
     let buf = ""
 
     let socket: ReturnType<typeof createConnection>
 
     if (IS_WIN) {
-      if (!existsSync(PORT_FILE)) { clearTimeout(timer); reject(new Error("Daemon is not running")); return }
+      if (!existsSync(PORT_FILE)) {
+        clearTimeout(timer)
+        reject(new Error("Daemon is not running"))
+        return
+      }
       const port = parseInt(readFileSync(PORT_FILE, "utf-8").trim(), 10)
       socket = createConnection({ host: "127.0.0.1", port })
     } else {
-      if (!existsSync(SOCKET_PATH)) { clearTimeout(timer); reject(new Error("Daemon is not running")); return }
+      if (!existsSync(SOCKET_PATH)) {
+        clearTimeout(timer)
+        reject(new Error("Daemon is not running"))
+        return
+      }
       socket = createConnection({ path: SOCKET_PATH })
     }
 
     socket.on("connect", () => socket.write(JSON.stringify(req) + "\n"))
     socket.on("data", (chunk) => {
       buf += chunk.toString()
-      const lines = buf.split("\n"); buf = lines.pop() ?? ""
+      const lines = buf.split("\n")
+      buf = lines.pop() ?? ""
       for (const line of lines) {
         if (!line.trim()) continue
         clearTimeout(timer)
-        try { resolve(JSON.parse(line) as IpcResponse) }
-        catch { reject(new Error("Invalid IPC response")) }
+        try {
+          resolve(JSON.parse(line) as IpcResponse)
+        } catch {
+          reject(new Error("Invalid IPC response"))
+        }
       }
     })
-    socket.on("error", (err) => { clearTimeout(timer); reject(err) })
+    socket.on("error", (err) => {
+      clearTimeout(timer)
+      reject(err)
+    })
   })
 }

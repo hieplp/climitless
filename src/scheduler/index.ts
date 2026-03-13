@@ -16,7 +16,10 @@ export class SchedulerManager {
 
   unregister(id: string): void {
     const job = this.jobs.get(id)
-    if (job) { job.stop(); this.jobs.delete(id) }
+    if (job) {
+      job.stop()
+      this.jobs.delete(id)
+    }
   }
 
   isRegistered(id: string): boolean {
@@ -33,5 +36,7 @@ export class SchedulerManager {
   }
 
   /** Alias used in tests */
-  stop(): void { this.stopAll() }
+  stop(): void {
+    this.stopAll()
+  }
 }

@@ -13,10 +13,7 @@ loadEnvFile()
 
 let config = readConfig()
 
-const logger = pino(
-  { level: config.daemon.log_level },
-  pino.destination(LOG_FILE)
-)
+const logger = pino({ level: config.daemon.log_level }, pino.destination(LOG_FILE))
 
 const scheduler = new SchedulerManager()
 
@@ -44,11 +41,13 @@ const ipcServer = createIpcServer({
   status: async () => ({
     running: true,
     pid: process.pid,
-    schedules: config.schedules.filter((s) => s.enabled).map((s) => ({
-      id: s.id,
-      cron: s.cron,
-      nextFire: scheduler.nextFire(s.id)?.toISOString() ?? null,
-    })),
+    schedules: config.schedules
+      .filter((s) => s.enabled)
+      .map((s) => ({
+        id: s.id,
+        cron: s.cron,
+        nextFire: scheduler.nextFire(s.id)?.toISOString() ?? null,
+      })),
   }),
   reload: async () => {
     registerAllSchedules()
@@ -71,5 +70,15 @@ const ipcServer = createIpcServer({
 
 logger.info({ pid: process.pid }, "climitless daemon started")
 
-process.on("SIGINT", () => { scheduler.stopAll(); ipcServer.stop(); clearPid(); process.exit(0) })
-process.on("SIGTERM", () => { scheduler.stopAll(); ipcServer.stop(); clearPid(); process.exit(0) })
+process.on("SIGINT", () => {
+  scheduler.stopAll()
+  ipcServer.stop()
+  clearPid()
+  process.exit(0)
+})
+process.on("SIGTERM", () => {
+  scheduler.stopAll()
+  ipcServer.stop()
+  clearPid()
+  process.exit(0)
+})

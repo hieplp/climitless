@@ -17,13 +17,21 @@ export async function fireTrigger(
 
     case "claude-api":
       if (!prompt) throw new Error("claude-api trigger requires a prompt")
-      await claudeApiTrigger(prompt, config.triggers.claude_api ?? { api_key_env: "ANTHROPIC_API_KEY", model: "claude-sonnet-4-6" })
+      await claudeApiTrigger(
+        prompt,
+        config.triggers.claude_api ?? {
+          api_key_env: "ANTHROPIC_API_KEY",
+          model: "claude-sonnet-4-6",
+        }
+      )
       break
 
     case "browser": {
       const url = config.triggers.browser?.url ?? "https://claude.ai"
       if (schedule.prompt_type === "fixed" || schedule.prompt_type === "dynamic") {
-        console.warn(`[climitless] Warning: schedule "${schedule.id}" has prompt_type "${schedule.prompt_type}" but uses browser trigger — the prompt is not sent to the browser`)
+        console.warn(
+          `[climitless] Warning: schedule "${schedule.id}" has prompt_type "${schedule.prompt_type}" but uses browser trigger — the prompt is not sent to the browser`
+        )
       }
       await browserTrigger(url)
       break

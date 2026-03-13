@@ -7,7 +7,8 @@ export async function claudeApiTrigger(
   config: ClaudeApiTriggerConfig
 ): Promise<void> {
   const apiKey = process.env[config.api_key_env]
-  if (!apiKey) throw new Error(`Env var ${config.api_key_env} is not set — cannot fire claude-api trigger`)
+  if (!apiKey)
+    throw new Error(`Env var ${config.api_key_env} is not set — cannot fire claude-api trigger`)
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

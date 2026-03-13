@@ -30,7 +30,9 @@ export function installAutostart(): void {
     execSync("systemctl --user enable climitless.service")
     execSync("systemctl --user start climitless.service")
   } else if (process.platform === "win32") {
-    execSync(`reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v climitless /t REG_SZ /d "${DAEMON_CMD}" /f`)
+    execSync(
+      `reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v climitless /t REG_SZ /d "${DAEMON_CMD}" /f`
+    )
   }
 }
 
@@ -38,15 +40,33 @@ export function uninstallAutostart(): void {
   if (process.platform === "darwin") {
     const plistPath = join(homedir(), "Library/LaunchAgents/com.climitless.daemon.plist")
     if (existsSync(plistPath)) {
-      try { execSync(`launchctl unload "${plistPath}"`) } catch { /* ignore */ }
+      try {
+        execSync(`launchctl unload "${plistPath}"`)
+      } catch {
+        /* ignore */
+      }
       unlinkSync(plistPath)
     }
   } else if (process.platform === "linux") {
-    try { execSync("systemctl --user disable climitless.service") } catch { /* ignore */ }
-    try { execSync("systemctl --user stop climitless.service") } catch { /* ignore */ }
+    try {
+      execSync("systemctl --user disable climitless.service")
+    } catch {
+      /* ignore */
+    }
+    try {
+      execSync("systemctl --user stop climitless.service")
+    } catch {
+      /* ignore */
+    }
     const path = join(homedir(), ".config/systemd/user/climitless.service")
     if (existsSync(path)) unlinkSync(path)
   } else if (process.platform === "win32") {
-    try { execSync(`reg delete "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v climitless /f`) } catch { /* ignore */ }
+    try {
+      execSync(
+        `reg delete "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /v climitless /f`
+      )
+    } catch {
+      /* ignore */
+    }
   }
 }

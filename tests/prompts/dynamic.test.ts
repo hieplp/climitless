@@ -18,7 +18,7 @@ describe("buildDynamic", () => {
   })
 
   it("replaces {{day_of_week}}", () => {
-    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const result = buildDynamic("Day: {{day_of_week}}", { scheduleId: "x" })
     expect(days.some((d) => result.includes(d))).toBe(true)
   })

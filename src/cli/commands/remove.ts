@@ -11,14 +11,20 @@ export function removeCommand(): Command {
       const config = readConfig()
       const idx = config.schedules.findIndex((s) => s.id === id)
       if (idx === -1) {
-        console.error(`Schedule "${id}" not found. Valid IDs: ${config.schedules.map((s) => s.id).join(", ")}`)
+        console.error(
+          `Schedule "${id}" not found. Valid IDs: ${config.schedules.map((s) => s.id).join(", ")}`
+        )
         process.exit(1)
       }
       config.schedules.splice(idx, 1)
       writeConfig(config)
       console.log(`Schedule "${id}" removed.`)
       if (isDaemonRunning()) {
-        try { await sendIpcCommand({ command: "reload" }) } catch { /* ignore */ }
+        try {
+          await sendIpcCommand({ command: "reload" })
+        } catch {
+          /* ignore */
+        }
       }
     })
 }
