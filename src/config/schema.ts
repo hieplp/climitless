@@ -1,7 +1,11 @@
 import { z } from "zod"
 
 const ScheduleEntrySchema = z.object({
-  id: z.string().min(3).max(64).regex(/^[a-z0-9-]+$/),
+  id: z
+    .string()
+    .min(3)
+    .max(64)
+    .regex(/^[a-z0-9-]+$/),
   cron: z.string().min(1),
   enabled: z.boolean().default(true),
   trigger: z.enum(["claude-cli", "claude-api", "browser", "log"]),

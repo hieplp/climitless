@@ -13,7 +13,10 @@ export function fireCommand(): Command {
     .action(async (id: string, opts) => {
       const config = readConfig()
       const schedule = config.schedules.find((s) => s.id === id)
-      if (!schedule) { console.error(`Schedule "${id}" not found`); process.exit(1) }
+      if (!schedule) {
+        console.error(`Schedule "${id}" not found`)
+        process.exit(1)
+      }
 
       const prompt = buildPrompt(schedule, config.prompts.pool)
 
@@ -28,9 +31,16 @@ export function fireCommand(): Command {
       if (isDaemonRunning()) {
         try {
           const res = await sendIpcCommand({ command: "fire", scheduleId: id })
-          if (res.ok) { console.log(`Schedule "${id}" fired.`); return }
-          else { console.error(res.error); process.exit(1) }
-        } catch { /* fall through to direct fire */ }
+          if (res.ok) {
+            console.log(`Schedule "${id}" fired.`)
+            return
+          } else {
+            console.error(res.error)
+            process.exit(1)
+          }
+        } catch {
+          /* fall through to direct fire */
+        }
       }
 
       await fireTrigger(schedule, prompt, config)

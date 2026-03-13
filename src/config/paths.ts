@@ -10,6 +10,4 @@ export const PID_FILE = join(CONFIG_DIR, "daemon.pid")
 
 // Platform-appropriate IPC path
 export const SOCKET_PATH =
-  process.platform === "win32"
-    ? "\\\\.\\pipe\\climitless"
-    : join(CONFIG_DIR, "daemon.sock")
+  process.platform === "win32" ? "\\\\.\\pipe\\climitless" : join(CONFIG_DIR, "daemon.sock")

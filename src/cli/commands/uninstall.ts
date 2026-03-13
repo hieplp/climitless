@@ -11,7 +11,11 @@ export function uninstallCommand(): Command {
     .option("--purge", "Also delete config, logs, and all user data")
     .action(async (opts) => {
       if (isDaemonRunning()) {
-        try { await sendIpcCommand({ command: "stop" }) } catch { /* ignore */ }
+        try {
+          await sendIpcCommand({ command: "stop" })
+        } catch {
+          /* ignore */
+        }
       }
       uninstallAutostart()
 

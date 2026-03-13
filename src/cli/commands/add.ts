@@ -22,14 +22,32 @@ export function addCommand(): Command {
       if (!cron) {
         entry = await runWizard(config)
       } else {
-        if (!opts.trigger) { console.error("--trigger is required"); process.exit(1) }
-        if (!opts.promptType) { console.error("--prompt-type is required"); process.exit(1) }
-        if (opts.promptType === "fixed" && !opts.prompt) { console.error("--prompt is required for fixed prompt-type"); process.exit(1) }
-        if (opts.promptType === "dynamic" && !opts.promptTemplate) { console.error("--prompt-template is required for dynamic prompt-type"); process.exit(1) }
+        if (!opts.trigger) {
+          console.error("--trigger is required")
+          process.exit(1)
+        }
+        if (!opts.promptType) {
+          console.error("--prompt-type is required")
+          process.exit(1)
+        }
+        if (opts.promptType === "fixed" && !opts.prompt) {
+          console.error("--prompt is required for fixed prompt-type")
+          process.exit(1)
+        }
+        if (opts.promptType === "dynamic" && !opts.promptTemplate) {
+          console.error("--prompt-template is required for dynamic prompt-type")
+          process.exit(1)
+        }
 
         const id = opts.id ?? generateId({ trigger: opts.trigger, cron }, config.schedules)
-        if (!validateId(id)) { console.error(`Invalid ID "${id}" — use lowercase alphanumeric and hyphens, 3-64 chars`); process.exit(1) }
-        if (config.schedules.find((s) => s.id === id)) { console.error(`Schedule ID "${id}" already exists`); process.exit(1) }
+        if (!validateId(id)) {
+          console.error(`Invalid ID "${id}" — use lowercase alphanumeric and hyphens, 3-64 chars`)
+          process.exit(1)
+        }
+        if (config.schedules.find((s) => s.id === id)) {
+          console.error(`Schedule ID "${id}" already exists`)
+          process.exit(1)
+        }
 
         entry = {
           id,
@@ -47,7 +65,11 @@ export function addCommand(): Command {
       console.log(`Schedule "${entry.id}" added.`)
 
       if (isDaemonRunning()) {
-        try { await sendIpcCommand({ command: "reload" }) } catch { /* daemon will reload on next start */ }
+        try {
+          await sendIpcCommand({ command: "reload" })
+        } catch {
+          /* daemon will reload on next start */
+        }
       }
     })
 }

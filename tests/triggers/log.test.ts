@@ -9,7 +9,9 @@ describe("logTrigger", () => {
 
   it("logs a structured JSON entry with all fields", async () => {
     const logged: string[] = []
-    console.log = mock((msg: string) => { logged.push(msg) }) as typeof console.log
+    console.log = mock((msg: string) => {
+      logged.push(msg)
+    }) as typeof console.log
 
     const { logTrigger } = await import("../../src/triggers/log")
     await logTrigger("check-cron", "*/5 * * * *", "Heartbeat check")
@@ -26,7 +28,9 @@ describe("logTrigger", () => {
 
   it("logs with null prompt", async () => {
     const logged: string[] = []
-    console.log = mock((msg: string) => { logged.push(msg) }) as typeof console.log
+    console.log = mock((msg: string) => {
+      logged.push(msg)
+    }) as typeof console.log
 
     const { logTrigger } = await import("../../src/triggers/log")
     await logTrigger("check-cron", "0 9 * * 1-5", null)

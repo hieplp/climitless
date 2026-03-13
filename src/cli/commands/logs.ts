@@ -11,7 +11,11 @@ export function logsCommand(): Command {
     .option("--schedule <id>", "Filter to a specific schedule")
     .option("--clear", "Clear all logs")
     .action((opts) => {
-      if (opts.clear) { clearLogs(); console.log("Logs cleared."); return }
+      if (opts.clear) {
+        clearLogs()
+        console.log("Logs cleared.")
+        return
+      }
 
       const lines = readLogs({ lines: parseInt(opts.lines, 10), scheduleId: opts.schedule })
       lines.forEach((l) => console.log(l))

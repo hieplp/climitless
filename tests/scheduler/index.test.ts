@@ -30,7 +30,10 @@ describe("SchedulerManager", () => {
 
   it("unregisters a schedule", () => {
     const sm = new SchedulerManager()
-    sm.register(entry, mock(async () => {}))
+    sm.register(
+      entry,
+      mock(async () => {})
+    )
     sm.unregister("test")
     expect(sm.isRegistered("test")).toBe(false)
     sm.stop()

@@ -10,10 +10,18 @@
     "start": "bun run src/cli/index.ts",
     "daemon": "bun run src/daemon/index.ts",
     "test": "bun test",
-    "lint": "bunx tsc --noEmit"
+    "format": "bunx prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "bunx prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint": "bunx tsc --noEmit && bunx eslint src tests",
+    "lint:fix": "bunx eslint --fix src tests"
   },
   "devDependencies": {
-    "@types/bun": "^1.3.10"
+    "@eslint/js": "^10.0.1",
+    "@types/bun": "^1.3.10",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.57.0"
   },
   "peerDependencies": {
     "typescript": "^5.9.3"

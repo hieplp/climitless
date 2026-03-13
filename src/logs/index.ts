@@ -11,7 +11,12 @@ export interface LogEntry {
 }
 
 const LEVEL_LABELS: Record<number, string> = {
-  10: "TRACE", 20: "DEBUG", 30: "INFO", 40: "WARN", 50: "ERROR", 60: "FATAL"
+  10: "TRACE",
+  20: "DEBUG",
+  30: "INFO",
+  40: "WARN",
+  50: "ERROR",
+  60: "FATAL",
 }
 
 function formatEntry(entry: LogEntry): string {
@@ -27,12 +32,20 @@ function parseEntries(scheduleId?: string): LogEntry[] {
     .trim()
     .split("\n")
     .filter((l) => l.trim())
-    .map((l) => { try { return JSON.parse(l) as LogEntry } catch { return null } })
+    .map((l) => {
+      try {
+        return JSON.parse(l) as LogEntry
+      } catch {
+        return null
+      }
+    })
     .filter((e): e is LogEntry => e !== null)
     .filter((e) => !scheduleId || e.scheduleId === scheduleId)
 }
 
-export function readLogs(opts: { lines?: number; scheduleId?: string; offsetLines?: number } = {}): string[] {
+export function readLogs(
+  opts: { lines?: number; scheduleId?: string; offsetLines?: number } = {}
+): string[] {
   const entries = parseEntries(opts.scheduleId)
   const sliced = opts.offsetLines ? entries.slice(opts.offsetLines) : entries
   const limited = opts.lines ? sliced.slice(-opts.lines) : sliced.slice(-50)
